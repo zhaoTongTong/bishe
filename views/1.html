@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script>
+        window.onload = function() {
+            alert(1);
+            var name = 'the window';
+            var object = {
+                name: 'my',
+                get: function() {
+                    var name = this.name;
+                    return function () {
+                        return name;
+                    }
+                }
+            }
+            alert(object.get()());
+        }
+    </script>
+</head>
+<body>
+
+</body>
+</html>

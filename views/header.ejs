@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>维修精灵</title>
+    <link rel="Shortcut Icon" href="images/favicon.ico">
+    <link rel="stylesheet" href="stylesheets/bootstrap.css">
+    <script src="javascripts/jquery-1.7.2.min.js"></script>
+    <script src="javascripts/bootstrap.min.js"></script>
+</head>
+
+<style>
+    html, body {
+        height: 100%;
+        width: 100%;
+    }
+
+    header {
+        height: 50px;
+        border-bottom: 1px solid #d5d5d5;
+    }
+
+    .nav li {
+        display: inline-block;
+        list-style: none;
+        line-height: 50px;
+        margin-left: 15px;
+    }
+
+    .nav li a {
+        color: #666;
+        text-decoration: none;
+    }
+
+    .nav li a:hover {
+        color: #ff0000;
+
+    }
+
+    #logo {
+        height: 50px;
+    }
+
+    .search {
+        border: none;
+        background-color: #ff552e;
+        height: 34px;
+        width: 34px;
+        outline: none;
+        border: 1px solid #ff552e;
+    }
+
+    .search:hover {
+        background-color: #cd0a0a;
+    }
+
+    footer {
+        text-align: center;
+        color: #d5d5d5;
+        height: 100px;
+        line-height: 100px;
+        margin-top: 100px;
+    }
+
+    #register:hover #login:hover {
+        cursor: pointer;
+    }
+
+    .remove:hover {
+        cursor: pointer;
+        opacity: 70;
+        filter: opacity(0.7);
+    }
+
+    .ovfHiden {
+        overflow: hidden;
+        height: 100%;
+    }
+</style>
+
+<body>
+<div class="container-fluid">
+    <header>
+        <div class="container">
+            <div class="row" style="margin-bottom: 15px;">
+                <div class="col-xs-2">
+                    <span>您的位置：</span><span
+                            style="line-height: 50px; color: #ff0000; font-weight: 600">北京</span>
+                </div>
+                <div class="col-xs-10">
+                    <nav class="nav navbar-right">
+                        <ul>
+                            <li id="personal"><a id="login" onclick="login()">
+                                    <small>登录</small>
+                                </a> / <a id="register" onclick="register()">
+                                    <small>注册</small>
+                                </a></li>
+                            <!--<li><a>个人中心</a></li>-->
+                            <li><a>帮助中心</a></li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-5">
+                    <img id="logo" src="/images/repair-logo2.png" alt="logo">
+                </div>
+                <div class="col-xs-5">
+                    <form class="navbar-form" role="search">
+                        <div class="form-group">
+                            <input type="text" placeholder="Search"
+                                   style="border: 1px solid #ff552e; border-radius: 0; outline: none; width: 300px; height: 36px; padding-left: 15px;">
+                            <button type="submit"
+                                    class="search">
+                                <span class="glyphicon glyphicon-search"
+                                      style="color: #ffffff; border-radius: 0"></span></button>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-xs-2">
+                    <button type="button" class="btn btn-default navbar-right"
+                            style="background-color: #ffe9de; font-weight: 600; border-radius: 0; border: none; color: #ff552e; height: 36px; margin-top: 8px; outline: none;">
+                        发布
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+</div>
+
+<script>
+    $(function () {
+
+    });
+
+    var regName = /^[\u4E00-\u9FA50-9a-zA-Z_]+$/;
+    var regTel = /^[0-9]{11}$/;
+    var regEmail = /^[0-9a-zA-Z_]+\@[0-9a-z]+\.[a-z]{2,4}$/;
+    var regPsd = /^[0-9a-zA-Z_]{6,12}$/
+    var regAds = /^[\u4E00-\u9FA5]/;
+
+    /*-------------------------注册------------------------*/
+    function register() {
+        $('body').addClass('ovfHiden');
+        $('body').append(`<div id="operation" style="z-index:999; height:100%; width: 100%; background-color: rgba(255, 255, 255, 0.9); position: absolute; top: 0; left: 0;">
+                <div class="remove" style="position: absolute; top: 30px; right: 30px; color: #ff552e;" onclick="remove()"><span class="glyphicon glyphicon-remove"></span></div>
+                    <div style="height: 340px; height: auto; width: 560px; position: absolute; top: 10%; left: 50%; margin-left: -280px;">
+                        <div style="opacity: 90;filter:opacity(0.9); position: absolute; top: 0; border-top-left-radius: 8px; border-top-right-radius: 8px; left: 0; width: 560px; height: 40px; background-color: #ff552e; line-height: 40px; font-size: 1.2em; text-align: center; color: #FFFFFF;"><span>注&nbsp;册</span></div>
+                        <div style="position: absolute; top: 40px; left: 0; min-height:300px; height: auto; width: 100%;background-color: #585858; border-bottom-left-radius: 8px; border-bottom-right-radius: 8px;">
+                            <div style="width: 300px; margin-left: 130px; margin-top: 30px;" >
+                                <div class="form-group"><label class="sr-only" for="exampleInputEmail3">Name</label><input type="text" class="form-control vali-item" data-vali="1" id="name" placeholder="Name" onblur="formatInputValue(this, 'name', regName, '请输入姓名', '姓名只能由文字、数字、字母、下划线组成','register')">
+                                    <small class="name" style="color: #f0ad4e; visibility:hidden">*</small></div>
+                                <div class="form-group"><label class="sr-only" for="exampleInputEmail3">Email</label><input type="email" class="form-control vali-item" data-vali="1" id="email" placeholder="Email" onblur="formatInputValue(this, 'email', regEmail, '请输入邮箱', '请输入正确格式的邮箱')">
+                                    <small class="email" style="color: #f0ad4e; visibility:hidden">*</small></div>
+                                <div class="form-group"><label class="sr-only" for="exampleInputEmail3">tel</label><input type="tel" class="form-control vali-item" data-vali="1" id="tel" placeholder="phone number" onblur="formatInputValue(this, 'tel', regTel, '请输入电话号码', '只能是11位手机号')">
+                                    <small class="tel" style="color: #f0ad4e; visibility:hidden">*</small></div>
+                                <div class="form-group"><label class="sr-only" for="exampleInputEmail3">address</label><input type="text" class="form-control vali-item" data-vali="1" id="address" placeholder="address" onblur="formatInputValue(this, 'address', regAds, '请输入地址', '格式不正确')">
+                                    <small class="address" style="color: #f0ad4e; visibility:hidden">*</small></div>
+                                <div class="form-group"><label class="sr-only" for="exampleInputEmail3">password</label><input type="password" class="form-control vali-item" data-vali="1" id="password" placeholder="password" onblur="formatInputValue(this, 'psd', regPsd, '请输入密码', '密码只能由6-12位的数字、字母、下划线组成')">
+                                    <small class="psd" style="color: #f0ad4e; visibility:hidden">*</small></div>
+                                <div class="form-group"><label class="sr-only" for="exampleInputEmail3">password again</label><input type="password" class="form-control vali-item" data-vali="1" id="repassword" placeholder="input password again" onblur="formatInputValue(this, 'repsd', regPsd, '请再次输入密码', '两次密码不一致')">
+                                    <small class="repsd" style="color: #f0ad4e; visibility:hidden">*</small></div>
+                                <div class="form-group" style="margin-top: 25px;">
+                                    <button type="submit" onclick="submitRegister()" id="submit" class="btn btn-default center-block disabled" style="border:none; color: #FFFFFF; background-color: #ff552e; outline: none; width: 300px;">REGISTER</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div></div>`)
+    }
+    /*-----------------------------end----------------------------*/
+
+
+    /*-------------------------format input value------------------------*/
+    function formatInputValue(ele, cls, reg, voidStr, inputStr, type) {
+        var [$ele, $eleValue] = initVar(ele);
+        isValid($ele, cls, reg, $eleValue, voidStr, inputStr, type);
+    }
+    /*----------------------------end----------------------------*/
+
+    //验证是否合法
+    function isValid(ele, cls, regData, inputVal, voidStr, inputStr, type) {
+        clearPrompt(cls, "*");
+        if (inputVal) {
+            if (cls == 'repsd') {
+                var psd = $('#password').val();
+                if (inputVal !== psd) {
+                    showPrompt(cls, inputStr);
+                    ele.data("vali", 1);
+
+                    submitClickale();
+                } else {
+                    ele.data("vali", 0);
+                    submitClickale();
+                }
+            } else {
+                if (!regData.test(inputVal)) {
+                    showPrompt(cls, inputStr);
+                    ele.data("vali", 1);
+                    submitClickale();
+                } else {
+                    if (cls == 'name' && type == 'register') {
+                        $.ajax({
+                            url: 'getDataList',
+                            type: 'GET',
+                            dataType: 'json',
+                            data: {
+                                data: 'user',
+                                name: $('#name').val()
+                            },
+                            success: function (result) {
+                                if(result.length>0) {
+                                    console.log('err')
+                                    showPrompt(cls, '该姓名已存在，请重新输入');
+                                    ele.data("vali", 1);
+                                    submitClickale();
+                                }else {
+                                    console.log('success')
+                                    ele.data("vali", 0);
+                                    submitClickale();
+                                }
+                            }
+                        })
+                    } else {
+                        ele.data("vali", 0);
+                        submitClickale();
+                    }
+                }
+            }
+        } else {
+            showPrompt(cls, voidStr);
+            ele.data("vali", 1);
+            submitClickale();
+        }
+    }
+    //end
+
+
+    //初始化变量
+    function initVar(ele) {
+        return [$(ele), $(ele).val()]
+    }
+    //end
+
+    //清除上次提示
+    function clearPrompt(cls, text) {
+        $("." + cls).html(text);
+        $("." + cls).css({visibility: 'hidden'})
+    }
+    //end
+
+    //显示提示内容
+    function showPrompt(cls, text) {
+        $("." + cls).html(text);
+        $("." + cls).css({visibility: 'visible'})
+    }
+    //end
+
+
+    //是否提交
+    function submitClickale() {
+        var validateStatus = true;
+        $('input.vali-item').each(function (index) {
+            if ($(this).data("vali") == 1) {
+                validateStatus = false;
+            }
+        })
+        if (validateStatus) {
+            $('#submit').removeClass('disabled');
+            $('#submit').prop('disabled', false);
+        } else {
+            $('#submit').addClass('disabled');
+            $('#submit').prop('disabled', true);
+        }
+    }
+    //end
+
+    //提交数据
+    function submitRegister() {
+        var name = $('#name').val();
+        var email = $('#email').val()
+        var tel = $('#tel').val()
+        var address = $('#address').val()
+        var password = $('#password').val()
+
+        if (name && email && tel && address && password) {
+            $.ajax({
+                url: '/setPersonalInfo',
+                type: 'POST',
+                datatype: 'json',
+                data: {
+                    collection: 'user',
+                    data: {
+                        name: name,
+                        email: email,
+                        tel: tel,
+                        address: address,
+                        password: password
+                    }
+                },
+                success: function (result) {
+                    console.log(result);
+                    remove();
+                }
+            })
+        }
+    }
+    //end
+
+
+    /*----------------------------登录----------------------------*/
+    function login() {
+        $('body').addClass('ovfHiden');
+        $('body').append(`<div id="operation" style="z-index:999; height:100%; width: 100%; background-color: rgba(255, 255, 255, 0.9); position: absolute; top: 0; left: 0;">
+                <div class="remove" style="position: absolute; top: 30px; right: 30px; color: #ff552e;" onclick="remove()"><span class="glyphicon glyphicon-remove"></span></div>
+                    <div style=" height: 340px; width: 500px; position: absolute; top: 50%; left: 50%; margin-left: -250px; margin-top: -170px;">
+                        <div style="opacity: 90;filter:opacity(0.9); position: absolute; top: 0; border-top-left-radius: 8px; border-top-right-radius: 8px; left: 0; width: 500px; height: 40px; background-color: #ff552e; line-height: 40px; font-size: 1.2em; text-align: center; color: #FFFFFF;"><span>登&nbsp;录</span></div>
+                        <div style="position: absolute; top: 40px; left: 0; height: 300px; width: 100%;background-color: #585858; border-bottom-left-radius: 8px; border-bottom-right-radius: 8px;">
+                            <div style="width: 300px; margin-left: 100px; margin-top: 60px;" >
+                                <div class="form-group">
+                                    <label class="sr-only" for="exampleInputEmail3">Name</label>
+                                    <input type="text" class="form-control vali-item" data-vali="1" id="name" placeholder="Name" onblur="formatInputValue(this, 'name', regName, '请输入姓名', '姓名只能由文字、数字、字母、下划线组成')">
+                                    <small class="name" style="color: #f0ad4e; visibility:hidden">*</small>
+                                </div>
+                                <div class="form-group">
+                                     <label class="sr-only" for="exampleInputEmail3">password address</label>
+                                     <input type="password" class="form-control vali-item" data-vali="1" id="password" placeholder="password"onblur="formatInputValue(this, 'psd', regPsd, '请输入密码', '密码只能由6-12位的数字、字母、下划线组成')">
+                                     <small class="psd" style="color: #f0ad4e; visibility:hidden">*</small>
+                                </div>
+                                <div class="form-group">
+                                <a href="#" style="text-decoration: underline; color: #f0ad4e"><small>忘记密码</small></a>
+                                </div>
+                                <div class="form-group" style="margin-top: 30px;">
+                                <button type="submit" id="submit" onclick="submitLogin()" class="btn btn-default center-block disabled" style="border:none; color: #FFFFFF; background-color: #ff552e; outline: none; width: 300px;">LOGIN</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            </div>`)
+    }
+    /*----------------------------end----------------------------*/
+
+
+    function submitLogin() {
+        var name = $('#name').val();
+        var password = $('#password').val();
+
+        if (name && password) {
+            $.ajax({
+                url: '/getDataList',
+                type: 'GET',
+                dataType: 'json',
+                data: {
+                    data: 'user',
+                    name: name,
+                    password: password
+                },
+                success: function (result) {
+                    if (result > 0) {
+                        remove();
+                        console.log(result);
+                        $('#personal').html(`<a><small>欢迎, ${result[0].name}</small></a> / <a><small>退出</small></a>`);
+                    } else {
+                        showPrompt("psd", '用户名或密码错误！');
+                    }
+                }
+            })
+        }
+    }
+
+    //关闭注册、登录
+    function remove() {
+        $('#operation').remove();
+        $('body').removeClass('ovfHiden');
+    }
+    //end
+
+
+</script>

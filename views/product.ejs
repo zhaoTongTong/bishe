@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel='stylesheet' href='/stylesheets/bootstrap.css' />
+  <link rel='stylesheet' href='/stylesheets/main.css' />
+  <link rel='stylesheet' href='/stylesheets/ui.jqgrid.css' />
+  <link rel='stylesheet' href='/stylesheets/fileinput.css' />
+  <link rel='stylesheet' href='/stylesheets/jquery-ui-1.8.16.custom.css' />
+  <!--<link rel="stylesheet" href="//cdn.bootcss.com/bootstrap-fileinput/4.3.8/css/fileinput.min.css">-->
+  <script src="javascripts/jquery-1.7.2.min.js"></script>
+  <script src="javascripts/jquery.jqGrid.min.js"></script>
+  <script src="javascripts/grid.locale-cn.js"></script>
+  <script src="javascripts/bootstrap.min.js"></script>
+  <script src="javascripts/ajaxfileupload.js"></script>
+  <script src="javascripts/fileinput.js"></script>
+  <!--<script src="//cdn.bootcss.com/bootstrap-fileinput/4.3.8/js/fileinput.min.js"></script>-->
+
+</head>
+<style>
+  html, body {
+    height: 100%;
+    width: 100%;
+  }
+</style>
+
+<body>
+<div class="container-fluid" id="container" style="position: relative;">
+  <div class="row">
+    <table id="list" class="col-xs-12"></table>
+    <div id="gridpager"></div>
+  </div>
+</div>
+
+<script>
+
+  initDataList();
+  $('.ui-search-table input').attr({
+    placeholder: 'ALL'
+  });
+  $("#addBtn").bind('click', function() {
+    addRow();
+  });
+
+  $("#delBtn").bind('click', function() {
+    delRow();
+  });
+
+  //init dataList
+  function initDataList() {
+    var mydata = {};
+    $.ajax({
+      async: false,
+      cache: false,
+      type: "GET",
+      url: "/getDataList",
+      data:  {
+        data: "product",
+        searchRange: {}
+      },
+      dataType: "json",
+      success: function(data) {
+        mydata = data;
+      }
+    });
+
+    $("#list").jqGrid({
+      datatype: "local",
+      data: mydata,
+      colNames:['ID', 'name', 'img', 'context', 'tel', 'address', 'brand', 'type'],
+      colModel:[
+        {name:'id',index:'id', align: 'center', width: "10%", search: false},
+        {name:'name',index:'name', align: 'center', width: "13%"},
+        {name:'img',index:'img', align: 'center', width: "13%", search: false},
+        {name:'context',index:'context', align: 'center', width: "13%", search: false},
+        {name:'tel',index:'tel', align: 'center', width: "13%", search: false},
+        {name:'address',index:'address', align: 'center', width: "13%"},
+        {name:'brand',index:'brand', align: 'center', width: "13%"},
+        {name:'type',index:'type', align: 'center', width: "13%"},
+      ],
+      rowNum: 10,
+      rowList: [10, 20, 30],
+      height:window.screen.availHeight,
+      width:window.screen.availWidth,
+      caption : "Product",
+      viewrecords : true,
+      shrinkToFit: true,
+      toolbar: [true, "both"],
+      viewsortcols:[false,'vertical',false],
+      multiselect: true,
+      autowidth: true,
+      pagerpos: 'center',
+      pager: 'gridpager',
+      emptyrecords: "Nothing to display",
+      pgtext: '第{0}页  共{1}页',
+      loadui: true,
+      gridComplete: function() {
+        var grid = $("#list");
+        var ids = grid.getDataIDs();
+        for (var i = 0; i < ids.length; i++) {
+          grid.setRowData ( ids[i], false, {height: 38} );
+        }
+      }
+    }).navGrid('#gridpager', {
+      edit: false,
+      add: false,
+      del: false,
+      refresh: false,
+      search: false
+    });
+    $('#pg_gridpager').css({
+      left: '50%',
+      marginLeft: '-200px'
+    });
+
+    $("#list").closest(".ui-jqgrid-bdiv").css({'overflow-y': 'scroll'});
+    $("#list").jqGrid('navGrid', '#gridpager', {edit : false,add : false,del : false,search:false});
+    $("#list").jqGrid('filterToolbar', 'autosearch');
+    $("#list").setGridHeight($(window).height()-170);
+    $("#t_list").append(
+            "<button id='addBtn' type='button' class='btn nav-info btn-xs' id='addBtn'>添加类别</button> "
+            +"<button id='delBtn' type='button' class='btn nav-info btn-xs' id='deleteMoreBtn'>删除</button>"
+    );
+    $("#t_list").css({height: "30px", "line-height":"26px"});
+
+  }
+  //end of init
+
+  //add a row
+  function addRow() {
+    var ids = $("#list").jqGrid("getDataIDs");
+    var rowid;
+
+    if(ids.length === 0) {
+      rowid = 1;
+    }else {
+      rowid = parseInt(ids[ids.length-1]) + 1;
+    }
+
+    $("#container").append(`
+      <div class="row" id="addform" style="position: absolute; mix-height: 100%;  overflow-y: scroll; width:100%; top: 0; background-color: rgba(255, 255, 255, 0.8)">
+        <div class="col-xs-12" style="clear: both;">
+          <form class='form-horizontal' onsubmit="return false;" style="height: 132px;">
+            <div class="row">
+                <div  class="col-xs-12">
+                  <button class="btn btn-danger navbar-right" id="delete">x</button>
+                </div>
+            </div>
+            <div class='form-group'>
+              <label for='inputEmail3' class='col-sm-2 control-label'>ID</label>
+              <div class='col-sm-10'>
+                <input style="width: 80%" type='ID' class='form-control' id='inputEmail3' placeholder=${rowid} disabled>
+              </div>
+            </div>
+            <div class='form-group'>
+              <label for='inputPassword3' class='col-sm-2 control-label'>NAME</label>
+              <div class='col-sm-10'>
+                <input style="width: 80%" type='name' class='form-control' id='name' placeholder='name'>
+              </div>
+            </div>
+            <div class='form-group'>
+              <label for='inputPassword3' class='col-sm-2 control-label'>IMG</label>
+              <div class='col-sm-10'>
+              <label class="control-label">Select File</label>
+                <input type='file' class="file-loading"  id='fileUploadInput' name="fileUploadInput">
+              </div>
+            </div>
+            <div class='form-group'>
+              <label for='inputPassword3' class='col-sm-2 control-label'>CONTEXT</label>
+              <div class='col-sm-10'>
+                <input style="width: 80%" type='context' class='form-control' id='context' placeholder='name'>
+              </div>
+            </div>
+            <div class='form-group'>
+              <label for='inputPassword3' class='col-sm-2 control-label'>TEL</label>
+              <div class='col-sm-10'>
+                <input style="width: 80%" type='tel' class='form-control' id='tel' placeholder='name'>
+              </div>
+            </div>
+            <div class='form-group'>
+              <label for='inputPassword3' class='col-sm-2 control-label'>ADDRESS</label>
+              <div class='col-sm-10'>
+                <input style="width: 80%" type='address' class='form-control' id='address' placeholder='name'>
+              </div>
+            </div>
+            <div class='form-group'>
+              <label for='inputPassword3' class='col-sm-2 control-label'>BRAND</label>
+              <div class="col-xs-10" id="brandList">
+              </div>
+            </div>
+            <div class='form-group'>
+              <label for='inputPassword3' class='col-sm-2 control-label'>TYPE</label>
+              <div class="col-xs-10" id="typeList">
+
+              </div>
+            </div>
+            <div class='form-group'>
+              <div class='col-sm-offset-2 col-sm-10'>
+                <button id="submit" type='submit' class='btn btn-info'>ADD</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>`);
+
+    $.ajax({
+      async: false,
+      cache: false,
+      type: "GET",
+      url: "/getDataList",
+      data:  {
+        data: "parentType",
+        searchRange:{}
+      },
+      dataType: "json",
+      success: function(data) {
+        var html = '<select id="type" name="type" class="form-control">';
+        data.forEach(function(element) {
+          html += `<option value="${element.name}">${element.name}</option>`
+        });
+
+        html += "</select>";
+        $('#typeList').append(html);
+      }
+    });
+    $.ajax({
+      async: false,
+      cache: false,
+      type: "GET",
+      url: "/getDataList",
+      data:  {
+        data: "brand",
+        searchRange:{}
+      },
+      dataType: "json",
+      success: function(data) {
+        var html = '<select id="brand" name="brand" class="form-control">';
+        data.forEach(function(element) {
+               html += `<option value="${element.name}">${element.name}</option>`
+        })
+
+        html += "</select>";
+        $('#brandList').append(html);
+      }
+    });
+
+    $("#submit").bind('click', function () {
+
+//      $.ajax({
+//        type: 'POST',
+//        url: '/uploadFile',
+//
+//      });
+
+      var name = $("#name").val();
+      var img = $("#img").val();
+      var context = $("#context").val();
+      var tel = $("#tel").val();
+      var address = $("#address").val();
+      var brand = $("#brand").val();
+      var type =$("#type").val();
+
+      if(name === '' || img === '' || context === '' || tel ==='' || address === '' || brand === '' || type==='') {
+        alert('请将信息填写完整');
+      }else {
+        var dataRow = {
+          id: rowid,
+          name: name,
+          img: img,
+          context: context,
+          tel: tel,
+          address: address,
+          brand: brand,
+          type: type
+        };
+        $.ajax({
+          type: "post",
+          url: "/addDataRow",
+          data: {
+            data: dataRow,
+            collection: "product"
+          },
+          datatype: "json",
+          success: function() {
+            console.log("add success");
+            $('#addform').remove();
+            window.parent.reloadFrame();
+          }
+        });
+      }
+    });
+    $("#delete").bind('click', function() {
+      $('#addform').remove();
+    });
+    initUploadPlugin()
+  }
+
+  //end of add
+
+
+  //delete a row
+  function delRow() {
+    var selectedRowIds = $("#list").jqGrid("getGridParam","selarrrow");
+    var data = selectedRowIds.slice(0);
+
+    if(selectedRowIds.length === 0) {
+      alert("请选择要删除的行");
+    }else {
+      var len = selectedRowIds.length;
+      for(var i = 0;i < len ;i ++) {
+        $("#list").jqGrid("delRowData", selectedRowIds[0]);
+      }
+      $.ajax({
+        type: "POST",
+        url: 'delDataRows',
+        data: {
+          data:data,
+          collection: 'product'
+        },
+        datatype: "json",
+        success: function() {
+          console.log("del success");
+        }
+      });
+    }
+  }
+  //end of delete
+
+  //初始化fileinput
+  var FileInput = function() {
+    var oFile = new Object();
+    //初始化fileinput控件（第一次初始化）
+    oFile.Init = function(ctrlName, uploadUrl) {
+      var control = $('#' + ctrlName);
+      //初始化上传控件的样式
+      control.fileinput({
+        overwriteInitial: true,
+        // showUploadedThumbs: false, //下次上传时，将删除插件中已上传的缩略图
+        language: 'zh', //设置语言
+        uploadUrl: uploadUrl, //上传的地址
+        allowedFileExtensions: ['jpg', 'gif', 'png', 'bmp'], //接收的文件后缀
+        showUpload: true, //是否显示上传按钮
+        showCaption: false, //是否显示标题
+        browseClass: "btn btn-primary", //按钮样式
+        //dropZoneEnabled: false,//是否显示拖拽区域
+        //minImageWidth: 50, //图片的最小宽度
+        //minImageHeight: 50,//图片的最小高度
+        //maxImageWidth: 1000,//图片的最大宽度
+        //maxImageHeight: 1000,//图片的最大高度
+        maxFileSize: 100, //单位为kb，如果为0表示不限制文件大小
+        //minFileCount: 0,
+        maxFileCount: 10, //表示允许同时上传的最大文件个数
+        enctype: 'multipart/form-data',
+        validateInitialCount: true,
+//        previewFileIcon: "<i class='glyphicon glyphicon-king'></i>",
+//        msgFilesTooMany: "选择上传的文件数量({n}) 超过允许的最大数值{m}！",
+      });
+      console.log('init success');
+    };
+    oFile.InitFresh = function(ctrlName, uploadUrl) {
+      var control = $('#' + ctrlName);
+      //重要，需要更新控件的附加参数内容，以及图片初始化显示
+      control.fileinput('refresh', {
+        uploadUrl: uploadUrl
+        // uploadExtraData: { id: id },
+//         initialPreview: [ //预览图片的设置
+//             "<img src='" + imageurl + "' class='file-preview-image' alt='肖像图片' title='肖像图片'>",
+//         ],
+      });
+    }
+    return oFile;
+  };
+  $(function(){
+
+
+  });
+  function initUploadPlugin(){
+    var oFileInput = new FileInput();
+    oFileInput.Init("fileUploadInput", "/uploadFile");
+  }
+</script>
+</body>
+</html>

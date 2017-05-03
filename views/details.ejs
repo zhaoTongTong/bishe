@@ -1,0 +1,67 @@
+<%include header.ejs%>
+
+<style>
+  .details-info {
+    padding: 15px;
+    background-color: #222;
+    color: #d5d5d5;
+  }
+  .details-info div {
+    margin-bottom: 10px;
+  }
+</style>
+
+<div class="container">
+  <div class="row">
+    <div class="col-xs-12 details-info" id="details-info">
+
+    </div>
+  </div>
+</div>
+
+
+<script>
+
+  var typeData;
+  var localURl = window.location.href;
+  var type = decodeURI(localURl.split('listName=')[1]).split('&')[0];
+  var id = localURl.split('id=')[1];
+
+  $.ajax({
+    async: false,
+    cache: false,
+    type: "GET",
+    url: "/getDataList",
+    data:  {
+      data: "product",
+      type: type,
+      id: id
+    },
+    dataType: "json",
+    success: function(data) {
+      typeData = data;
+      $('#details-info').append(`
+      <div style="color: #00B7FF;">产品：${typeData[0].name}</div>
+      <div>描述：${typeData[0].context}</div>
+      <div>品牌：${typeData[0].brand}</div>
+      <div>地址：${typeData[0].address}</div>
+      <div>欢迎电联：${typeData[0].tel}</div>
+      `);
+    }
+  });
+
+  /*nav li change*/
+  var liArr = $.makeArray($('#example-navbar-collapse li'));
+  var style = 'color: #00B7FF;fonts-size: 1.2em;';
+
+  liArr.forEach(function(element) {
+    $(element).removeClass('active');
+    var a = element.getElementsByTagName('a');
+    $(a).removeAttr('style');
+  });
+
+  $(liArr[2]).addClass('active');
+  var a = liArr[2].getElementsByTagName('a');
+  $(a).attr("style", style);
+</script>
+<%include footer.ejs%>
