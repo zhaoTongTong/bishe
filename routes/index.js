@@ -43,6 +43,10 @@ router.get('getProduct', async function (ctx, next) {
   await ctx.render('product', {
   });
 });
+router.get('getnew', async function (ctx, next) {
+  await ctx.render('new', {
+  });
+});
 
 router.get('editing', async function (ctx, next) {
   await ctx.render('edit', {

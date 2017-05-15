@@ -1,10 +1,21 @@
 var MongoClient = require('mongodb').MongoClient;
 const DB_CONN_STR = "mongodb://localhost:27017/repair";
 
-
 function insertType(db, dataRow, callback) {
     var collection = db.collection(dataRow.collection);
-    dataRow.data.id = parseInt(dataRow.data.id);
+
+    collection.find({}).toArray(function (err, result) {
+        dataRow.data.id = result.length+1;
+
+        collection.insertOne(dataRow.data, function(err, result) {
+            if(err) {
+                console.log("Error11: "+ err);
+                return;
+            }else {
+                callback(result);
+            }
+        });
+    });
 
     //collection.findAndModify({update:{$inc:{'id':1}}, query:dataRow.data, new:true, function() {
     //    "use strict";
@@ -15,14 +26,14 @@ function insertType(db, dataRow, callback) {
     //        callback(result);
     //    }
     //}});
-    collection.insertOne(dataRow.data, function(err, result) {
-        if(err) {
-            console.log("Error11: "+ err);
-            return;
-        }else {
-            callback(result);
-        }
-    });
+    //collection.insertOne(dataRow.data, function(err, result) {
+    //    if(err) {
+    //        console.log("Error11: "+ err);
+    //        return;
+    //    }else {
+    //        callback(result);
+    //    }
+    //});
 }
 
 exports.add = function(ctx, callback) {
