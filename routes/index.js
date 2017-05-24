@@ -2,8 +2,12 @@ var router = require('koa-router')();
 var find = require('../src/mongodb/find');
 var add = require('../src/mongodb/add');
 var del = require('../src/mongodb/delete');
+//var session = require('koa-session');
+//var convert = require('koa-convert');
 const formidable = require('formidable');
 var Promise = require('promise');
+
+//router.use(convert(session(router)));
 
 router.get('/', async function (ctx, next) {
   ctx.state = {

@@ -359,9 +359,6 @@
                         remove();
                         console.log(result);
                         $('#personal').html(`<a href="#"><small>欢迎, ${result[0].name}</small></a> / <a onclick="exitLogin()"><small>退出</small></a>`);
-                        sessionStorage.setItem('name',result[0].name);
-                        var dt = sessionStorage.getItem('name');
-                        alert(dt);
                     } else {
                         showPrompt("psd", '用户名或密码错误！');
                     }
