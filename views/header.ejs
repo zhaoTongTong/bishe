@@ -316,7 +316,7 @@
                     if (result.length > 0) {
                         remove();
                         console.log(result);
-                        $('#personal').html(`<a href="#"><small>欢迎, ${result[0].name}</small></a> / <a onclick="exitLogin()"><small>退出</small></a>`);
+                        $('#personal').html(`<a href="/personal"><small>欢迎, ${result[0].name}</small></a> / <a onclick="exitLogin()"><small>退出</small></a>`);
                     } else {
                         showPrompt("psd", '用户名或密码错误！');
                     }
