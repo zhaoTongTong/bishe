@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel='stylesheet' href='/stylesheets/bootstrap.css'/>
+    <script src="javascripts/jquery-1.7.2.min.js"></script>
+    <script src="javascripts/bootstrap.min.js"></script>
+</head>
+<style>
+    html, body {
+        height: 100%;
+        width: 100%;
+    }
+</style>
+
+<body>
+<div class="container-fliud">
+    <div class="col-xs-12">
+        <div class="form-group">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <label for="exampleInputEmail1" style="color: #7e7e7e;">请输入原密码</label>
+                </div>
+                <div class="panel-body">
+                    <input type="password" onblur="isTrue(this)" class="form-control" id="oldPsd" placeholder="old password">
+
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <label for="exampleInputPassword1" style="color: #7e7e7e;">请输入新密码</label>
+                </div>
+                <div class="panel-body">
+                    <input type="password" onblur="isSame(this)" class="form-control" id="newPsd" placeholder="new password">
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <label for="exampleInputPassword1" style="color: #7e7e7e;">请再次输入新密码</label>
+                </div>
+                <div class="panel-body">
+                    <input type="password" onblur="isSame(this)" class="form-control" id="newPsdAgain" placeholder="new password again">
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <button onclick="changePsd()" class="btn btn-info center-block" style="width: 150px; height: 40px; margin-top: 40px;">确认修改</button>
+        </div>
+    </div>
+</div>
+</body>
+<script>
+
+    //提交修改的密码
+    function changePsd() {
+//        if(isTrue() && issame()){
+// //        var newPsd = $('#newPsd').val();
+//        $.ajax({
+////            将新密码提交
+//        })}
+    }
+
+    //验证旧密码是否正确
+    function isTrue(element) {
+        alert('old')
+    }
+
+    //验证两次输入的新密码是否一致
+    function isSame(element) {
+        alert(element.id)
+    }
+
+</script>
+</html>

@@ -1,0 +1,46 @@
+<% include header.ejs %>
+<div class="row">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-2">
+                <div class="list-group" id="list-group">
+                    <a href="#" class="list-group-item disabled">
+                        个人中心
+                    </a>
+                    <a href="#" class="list-group-item list active">个人信息<span
+                                style="font-size: 0.8em; font-weight: 100; float: right;"
+                                class="glyphicon glyphicon-menu-right"></span></a>
+                    <a href="#" class="list-group-item list">发布/查看信息<span
+                                style="font-size: 0.8em; font-weight: 100; float: right;"
+                                class="glyphicon glyphicon-menu-right"></span></a>
+                    <a href="#" class="list-group-item list">修改密码<span
+                                style="font-size: 0.8em; font-weight: 100; float: right;"
+                                class="glyphicon glyphicon-menu-right"></span></a>
+                </div>
+            </div>
+            <div class="col-xs-10">
+                <div class="row" style="height: 590px">
+                    <iframe id="iframe" src="getPersonalInfo" frameborder="0" width="100%" height="100%"
+                            scrolling="yes"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var listArray = $('#list-group .list');
+    var srcArray = ['getPersonalInfo', 'sendInfo', 'changePsd'];
+
+    //首先将类数组对象转换成数组
+    $.makeArray(listArray).forEach(function (element, index) {
+        element.onclick = function () {
+            $.makeArray(listArray).forEach(function (element) {
+                $(element).removeClass('active');
+            });
+
+            $('#iframe').attr({src: srcArray[index]});
+            $(element).addClass('active');
+        }
+    })
+</script>
