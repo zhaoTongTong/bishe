@@ -34,7 +34,6 @@
 
     .nav li a:hover {
         color: #ff0000;
-
     }
 
     #logo {
@@ -59,7 +58,7 @@
         color: #d5d5d5;
         height: 100px;
         line-height: 100px;
-        margin-top: 10px;
+        margin-top: 100px;
     }
 
     #register:hover #login:hover {
@@ -99,23 +98,26 @@
                                 </a> / <a id="register" onclick="register()">
                                     <small>注册</small>
                                 </a></li>
-                            <li><a onclick="alert('还在玩命开发中呦~')">帮助中心</a></li>
+                            <!--<li><a>个人中心</a></li>-->
+                            <li><a>帮助中心</a></li>
                         </ul>
                     </nav>
                 </div>
             </div>
+        </div>
+    </header>
+</div>
 
-            <script>
-                var regName = /^[\u4E00-\u9FA50-9a-zA-Z_]+$/;
-                var regTel = /^[0-9]{11}$/;
-                var regEmail = /^[0-9a-zA-Z_]+\@[0-9a-z]+\.[a-z]{2,4}$/;
-                var regPsd = /^[0-9a-zA-Z_]{6,12}$/
-                var regAds = /^[\u4E00-\u9FA5]/;
-
-                /*-------------------------注册------------------------*/
-                function register() {
-                    $('body').addClass('ovfHiden');
-                    $('body').append(`<div id="operation" style="z-index:999; height:100%; width: 100%; background-color: rgba(255, 255, 255, 0.9); position: absolute; top: 0; left: 0;">
+<script>
+    var regName = /^[\u4E00-\u9FA50-9a-zA-Z_]+$/;
+    var regTel = /^[0-9]{11}$/;
+    var regEmail = /^[0-9a-zA-Z_]+\@[0-9a-z]+\.[a-z]{2,4}$/;
+    var regPsd = /^[0-9a-zA-Z_]{6,12}$/
+    var regAds = /^[\u4E00-\u9FA5]/;
+    /*-------------------------注册------------------------*/
+    function register() {
+        $('body').addClass('ovfHiden');
+        $('body').append(`<div id="operation" style="z-index:999; height:100%; width: 100%; background-color: rgba(255, 255, 255, 0.9); position: absolute; top: 0; left: 0;">
                 <div class="remove" style="position: absolute; top: 30px; right: 30px; color: #ff552e;" onclick="remove()"><span class="glyphicon glyphicon-remove"></span></div>
                     <div style="height: 340px; height: auto; width: 560px; position: absolute; top: 10%; left: 50%; margin-left: -280px;">
                         <div style="opacity: 90;filter:opacity(0.9); position: absolute; top: 0; border-top-left-radius: 8px; border-top-right-radius: 8px; left: 0; width: 560px; height: 40px; background-color: #ff552e; line-height: 40px; font-size: 1.2em; text-align: center; color: #FFFFFF;"><span>注&nbsp;册</span></div>
@@ -139,151 +141,137 @@
                             </div>
                         </div>
                     </div></div>`)
+    }
+    /*-----------------------------end----------------------------*/
+    /*-------------------------format input value------------------------*/
+    function formatInputValue(ele, cls, reg, voidStr, inputStr, type) {
+        var [$ele, $eleValue] = initVar(ele);
+        isValid($ele, cls, reg, $eleValue, voidStr, inputStr, type);
+    }
+    /*----------------------------end----------------------------*/
+    //验证是否合法
+    function isValid(ele, cls, regData, inputVal, voidStr, inputStr, type) {
+        clearPrompt(cls, "*");
+        if (inputVal) {
+            if (cls == 'repsd') {
+                var psd = $('#password').val();
+                if (inputVal !== psd) {
+                    showPrompt(cls, inputStr);
+                    ele.data("vali", 1);
+                    submitClickale();
+                } else {
+                    ele.data("vali", 0);
+                    submitClickale();
                 }
-                /*-----------------------------end----------------------------*/
-
-
-                /*-------------------------format input value------------------------*/
-                function formatInputValue(ele, cls, reg, voidStr, inputStr, type) {
-                    var [$ele, $eleValue] = initVar(ele);
-                    isValid($ele, cls, reg, $eleValue, voidStr, inputStr, type);
-                }
-                /*----------------------------end----------------------------*/
-
-                //验证是否合法
-                function isValid(ele, cls, regData, inputVal, voidStr, inputStr, type) {
-                    clearPrompt(cls, "*");
-                    if (inputVal) {
-                        if (cls == 'repsd') {
-                            var psd = $('#password').val();
-                            if (inputVal !== psd) {
-                                showPrompt(cls, inputStr);
-                                ele.data("vali", 1);
-
-                                submitClickale();
-                            } else {
-                                ele.data("vali", 0);
-                                submitClickale();
-                            }
-                        } else {
-                            if (!regData.test(inputVal)) {
-                                showPrompt(cls, inputStr);
-                                ele.data("vali", 1);
-                                submitClickale();
-                            } else {
-                                if (cls == 'name' && type == 'register') {
-                                    $.ajax({
-                                        url: 'getDataList',
-                                        type: 'GET',
-                                        dataType: 'json',
-                                        data: {
-                                            data: 'user',
-                                            name: $('#name').val()
-                                        },
-                                        success: function (result) {
-                                            if (result.length > 0) {
-                                                console.log('err')
-                                                showPrompt(cls, '该姓名已存在，请重新输入');
-                                                ele.data("vali", 1);
-                                                submitClickale();
-                                            } else {
-                                                console.log('success')
-                                                ele.data("vali", 0);
-                                                submitClickale();
-                                            }
-                                        }
-                                    })
+            } else {
+                if (!regData.test(inputVal)) {
+                    showPrompt(cls, inputStr);
+                    ele.data("vali", 1);
+                    submitClickale();
+                } else {
+                    if (cls == 'name' && type == 'register') {
+                        $.ajax({
+                            url: '/users/login',
+                            type: 'GET',
+                            dataType: 'json',
+                            data: {
+                                data: 'user',
+                                name: $('#name').val()
+                            },
+                            success: function (result) {
+                                if (result.length > 0) {
+                                    console.log('err')
+                                    showPrompt(cls, '该姓名已存在，请重新输入');
+                                    ele.data("vali", 1);
+                                    submitClickale();
                                 } else {
+                                    console.log('success')
                                     ele.data("vali", 0);
                                     submitClickale();
                                 }
                             }
-                        }
+                        })
                     } else {
-                        showPrompt(cls, voidStr);
-                        ele.data("vali", 1);
+                        ele.data("vali", 0);
                         submitClickale();
                     }
                 }
-                //end
-
-
-                //初始化变量
-                function initVar(ele) {
-                    return [$(ele), $(ele).val()]
-                }
-                //end
-
-                //清除上次提示
-                function clearPrompt(cls, text) {
-                    $("." + cls).html(text);
-                    $("." + cls).css({visibility: 'hidden'})
-                }
-                //end
-
-                //显示提示内容
-                function showPrompt(cls, text) {
-                    $("." + cls).html(text);
-                    $("." + cls).css({visibility: 'visible'})
-                }
-                //end
-
-
-                //是否提交
-                function submitClickale() {
-                    var validateStatus = true;
-                    $('input.vali-item').each(function (index) {
-                        if ($(this).data("vali") == 1) {
-                            validateStatus = false;
-                        }
-                    })
-                    if (validateStatus) {
-                        $('#submit').removeClass('disabled');
-                        $('#submit').prop('disabled', false);
-                    } else {
-                        $('#submit').addClass('disabled');
-                        $('#submit').prop('disabled', true);
+            }
+        } else {
+            showPrompt(cls, voidStr);
+            ele.data("vali", 1);
+            submitClickale();
+        }
+    }
+    //end
+    //初始化变量
+    function initVar(ele) {
+        return [$(ele), $(ele).val()]
+    }
+    //end
+    //清除上次提示
+    function clearPrompt(cls, text) {
+        $("." + cls).html(text);
+        $("." + cls).css({visibility: 'hidden'})
+    }
+    //end
+    //显示提示内容
+    function showPrompt(cls, text) {
+        $("." + cls).html(text);
+        $("." + cls).css({visibility: 'visible'})
+    }
+    //end
+    //是否提交
+    function submitClickale() {
+        var validateStatus = true;
+        $('input.vali-item').each(function (index) {
+            if ($(this).data("vali") == 1) {
+                validateStatus = false;
+            }
+        })
+        if (validateStatus) {
+            $('#submit').removeClass('disabled');
+            $('#submit').prop('disabled', false);
+        } else {
+            $('#submit').addClass('disabled');
+            $('#submit').prop('disabled', true);
+        }
+    }
+    //end
+    //提交数据
+    function submitRegister() {
+        var name = $('#name').val();
+        var email = $('#email').val()
+        var tel = $('#tel').val()
+        var address = $('#address').val()
+        var password = $('#password').val()
+        if (name && email && tel && address && password) {
+            $.ajax({
+                url: '/setPersonalInfo',
+                type: 'POST',
+                datatype: 'json',
+                data: {
+                    collection: 'user',
+                    data: {
+                        name: name,
+                        email: email,
+                        tel: tel,
+                        address: address,
+                        password: password
                     }
+                },
+                success: function (result) {
+                    console.log(result);
+                    remove();
                 }
-                //end
-
-                //提交数据
-                function submitRegister() {
-                    var name = $('#name').val();
-                    var email = $('#email').val()
-                    var tel = $('#tel').val()
-                    var address = $('#address').val()
-                    var password = $('#password').val()
-
-                    if (name && email && tel && address && password) {
-                        $.ajax({
-                            url: '/setPersonalInfo',
-                            type: 'POST',
-                            datatype: 'json',
-                            data: {
-                                collection: 'user',
-                                data: {
-                                    name: name,
-                                    email: email,
-                                    tel: tel,
-                                    address: address,
-                                    password: password
-                                }
-                            },
-                            success: function (result) {
-                                console.log(result);
-                                remove();
-                            }
-                        })
-                    }
-                }
-                //end
-
-
-                /*----------------------------登录----------------------------*/
-                function login() {
-                    $('body').addClass('ovfHiden');
-                    $('body').append(`<div id="operation" style="z-index:999; height:100%; width: 100%; background-color: rgba(255, 255, 255, 0.9); position: absolute; top: 0; left: 0;">
+            })
+        }
+    }
+    //end
+    /*----------------------------登录----------------------------*/
+    function login() {
+        $('body').addClass('ovfHiden');
+        $('body').append(`<div id="operation" style="z-index:999; height:100%; width: 100%; background-color: rgba(255, 255, 255, 0.9); position: absolute; top: 0; left: 0;">
                 <div class="remove" style="position: absolute; top: 30px; right: 30px; color: #ff552e;" onclick="remove()"><span class="glyphicon glyphicon-remove"></span></div>
                     <div style=" height: 340px; width: 500px; position: absolute; top: 50%; left: 50%; margin-left: -250px; margin-top: -170px;">
                         <div style="opacity: 90;filter:opacity(0.9); position: absolute; top: 0; border-top-left-radius: 8px; border-top-right-radius: 8px; left: 0; width: 500px; height: 40px; background-color: #ff552e; line-height: 40px; font-size: 1.2em; text-align: center; color: #FFFFFF;"><span>登&nbsp;录</span></div>
@@ -309,58 +297,48 @@
                         </div>
                     </div>
             </div>`)
-                }
-                /*----------------------------end----------------------------*/
-
-
-                function submitLogin() {
-                    var name = $('#name').val();
-                    var password = $('#password').val();
-
-                    if (name && password) {
-                        $.ajax({
-                            url: '/getDataList',
-                            type: 'GET',
-                            dataType: 'json',
-                            data: {
-                                data: 'user',
-                                name: name,
-                                password: password
-                            },
-                            success: function (result) {
-                                if (result.length > 0) {
-                                    remove();
-                                    console.log(result);
-                                    $('#personal').html(`<a href="/personal"><small>欢迎, ${result[0].name}</small></a> / <a onclick="exitLogin()"><small>退出</small></a>`);
-                                } else {
-                                    showPrompt("psd", '用户名或密码错误！');
-                                }
-                            }
-                        })
+    }
+    /*----------------------------end----------------------------*/
+    function submitLogin() {
+        var name = $('#name').val();
+        var password = $('#password').val();
+        if (name && password) {
+            $.ajax({
+                url: '/getDataList',
+                type: 'GET',
+                dataType: 'json',
+                data: {
+                    data: 'user',
+                    name: name,
+                    password: password
+                },
+                success: function (result) {
+                    if (result.length > 0) {
+                        remove();
+                        console.log(result);
+                        $('#personal').html(`<a href="#"><small>欢迎, ${result[0].name}</small></a> / <a onclick="exitLogin()"><small>退出</small></a>`);
+                    } else {
+                        showPrompt("psd", '用户名或密码错误！');
                     }
                 }
-
-                //退出登录
-                function exitLogin() {
-
-                    //刷新页面
-                    location.reload(true);
-
-                    $('#personal').html(`<li id="personal"><a id="login" onclick="login()">
+            })
+        }
+    }
+    //退出登录
+    function exitLogin() {
+        //刷新页面
+        location.reload(true);
+        $('#personal').html(`<li id="personal"><a id="login" onclick="login()">
                 <small>登录</small>
                 </a> / <a id="register" onclick="register()">
                     <small>注册</small>
                 </a></li>`);
-                }
-                //end
-
-
-                //关闭注册、登录
-                function remove() {
-                    $('#operation').remove();
-                    $('body').removeClass('ovfHiden');
-                }
-                //end
-
-
-            </script>
+    }
+    //end
+    //关闭注册、登录
+    function remove() {
+        $('#operation').remove();
+        $('body').removeClass('ovfHiden');
+    }
+    //end
+</script>
