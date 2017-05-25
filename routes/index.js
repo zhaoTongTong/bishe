@@ -43,10 +43,16 @@ router.get('getBrand', async function (ctx, next) {
   });
 });
 
-router.get('getProduct', async function (ctx, next) {
-  await ctx.render('product', {
+router.get('getPersonalInfo', async function (ctx, next) {
+  await ctx.render('personalInfo', {
   });
 });
+
+router.get('changePsd', async function (ctx, next) {
+  await ctx.render('changePsd', {
+  });
+});
+
 router.get('getnew', async function (ctx, next) {
   await ctx.render('new', {
   });
@@ -54,6 +60,16 @@ router.get('getnew', async function (ctx, next) {
 
 router.get('editing', async function (ctx, next) {
   await ctx.render('edit', {
+  });
+});
+
+router.get('personal', async function (ctx, next) {
+  await ctx.render('personal', {
+  });
+});
+
+router.get('sendInfo', async function (ctx, next) {
+  await ctx.render('product', {
   });
 });
 

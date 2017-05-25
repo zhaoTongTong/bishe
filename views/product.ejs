@@ -21,6 +21,9 @@
     height: 100%;
     width: 100%;
   }
+  html {
+    overflow-x:hidden;
+  }
 </style>
 
 <body>
@@ -81,7 +84,7 @@
       rowList: [10, 20, 30],
       height:window.screen.availHeight,
       width:window.screen.availWidth,
-      caption : "Product",
+      caption : "维修信息汇总",
       viewrecords : true,
       shrinkToFit: true,
       toolbar: [true, "both"],
@@ -117,8 +120,8 @@
     $("#list").jqGrid('filterToolbar', 'autosearch');
     $("#list").setGridHeight($(window).height()-170);
     $("#t_list").append(
-            "<button id='addBtn' type='button' class='btn nav-info btn-xs' id='addBtn'>添加类别</button> "
-            +"<button id='delBtn' type='button' class='btn nav-info btn-xs' id='deleteMoreBtn'>删除</button>"
+            "<button id='addBtn' type='button' class='btn nav-info btn-xs' id='addBtn'>发布信息</button> "
+            +"<button id='delBtn' type='button' class='btn nav-info btn-xs' id='deleteMoreBtn'>删除信息</button>"
     );
     $("#t_list").css({height: "30px", "line-height":"26px"});
 
