@@ -8,12 +8,13 @@
                     <a href="#" class="list-group-item disabled">
                         个人中心
                     </a>
-                    <a href="#" class="list-group-item list active">个人信息<span
+                    <a href="#" class="list-group-item list active">发布/查看信息<span
                                 style="font-size: 0.8em; font-weight: 100; float: right;"
                                 class="glyphicon glyphicon-menu-right"></span></a>
-                    <a href="#" class="list-group-item list">发布/查看信息<span
+                    <a href="#" class="list-group-item list">个人信息<span
                                 style="font-size: 0.8em; font-weight: 100; float: right;"
                                 class="glyphicon glyphicon-menu-right"></span></a>
+
                     <a href="#" class="list-group-item list">修改密码<span
                                 style="font-size: 0.8em; font-weight: 100; float: right;"
                                 class="glyphicon glyphicon-menu-right"></span></a>
@@ -21,7 +22,7 @@
             </div>
             <div class="col-xs-10">
                 <div class="row" style="height: 590px">
-                    <iframe id="iframe" src="getPersonalInfo" frameborder="0" width="100%" height="100%"
+                    <iframe id="iframe" src="sendInfo" frameborder="0" width="100%" height="100%"
                             scrolling="yes"></iframe>
                 </div>
             </div>
@@ -31,7 +32,7 @@
 
 <script>
     var listArray = $('#list-group .list');
-    var srcArray = ['getPersonalInfo', 'sendInfo', 'changePsd'];
+    var srcArray = ['sendInfo', 'getPersonalInfo', 'changePsd'];
 
     //首先将类数组对象转换成数组
     $.makeArray(listArray).forEach(function (element, index) {
@@ -44,6 +45,26 @@
             $(element).addClass('active');
         }
     })
+
+    //修改密码后退出登录
+    function exit() {
+        //刷新页面
+        $.ajax({
+            url:'/users/logout',
+            type:'get',
+            datatype: 'json',
+            success: function(result) {
+                window.location.href='/home';
+                $('#personal').html(`<li id="personal"><a id="login" onclick="login()">
+                <small>登录</small>
+                </a> / <a id="register" onclick="register()">
+                    <small>注册</small>
+                </a></li>`);
+            }
+        })
+//        location.reload(true);
+
+    }
 
 
 </script>

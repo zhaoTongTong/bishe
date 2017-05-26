@@ -75,6 +75,7 @@ router.get('changePsd', async function (ctx, next) {
     address: j.address,
     tel: j.tel,
     id: j.id
+
   });
 });
 
