@@ -6,7 +6,6 @@ router.get('/getBrandListByTypeId', async function (ctx, next) {
     var collection = ctx.query.data;
     var pid = ctx.query.pid;
     var res = await mdb.getRows(collection, {pid: pid});
-    console.log(res);
     ctx.body = res;
 });
 router.get('/list', async function (ctx, next) {
@@ -29,9 +28,7 @@ router.get('/list', async function (ctx, next) {
 });
 router.get('/detail', async function (ctx, next) {
     var id = ctx.query.id;
-    console.log(id);
-    var res = await mdb.getRowByQuery('product', {id: id});
-    console.log(res);
+    var res = await mdb.getRowByQuery('product', {id: parseInt(id)});
     var j = ctx.cookies.get('koa:sess'), name = "";
     if(j) {
         j = JSON.parse(decodeURI(j));
