@@ -186,14 +186,17 @@
               </div>
             </div>
             <div class='form-group'>
-              <label for='inputPassword3' class='col-sm-2 control-label'>BRAND</label>
-              <div class="col-xs-10" id="brandList">
+              <label for='inputPassword3' class='col-sm-2 control-label'>TYPE</label>
+              <div class="col-xs-10" id="typeList">
+                <select id="type" name="type" class="form-control">
+                </select>
               </div>
             </div>
             <div class='form-group'>
-              <label for='inputPassword3' class='col-sm-2 control-label'>TYPE</label>
-              <div class="col-xs-10" id="typeList">
-
+              <label for='inputPassword3' class='col-sm-2 control-label'>BRAND</label>
+              <div class="col-xs-10" id="brandList">
+                <select id="brand" name="brand" class="form-control">
+                </select>
               </div>
             </div>
             <div class='form-group'>
@@ -216,34 +219,33 @@
       },
       dataType: "json",
       success: function(data) {
-        var html = '<select id="type" name="type" class="form-control">';
+        var html = '<option value="">请选择</option>';
         data.forEach(function(element) {
-          html += `<option value="${element.name}">${element.name}</option>`
+          html += `<option value="${element.id}">${element.name}</option>`
         });
-
-        html += "</select>";
-        $('#typeList').append(html);
+        $('#type').append(html);
       }
     });
-    $.ajax({
-      async: false,
-      cache: false,
-      type: "GET",
-      url: "/getDataList",
-      data:  {
-        data: "brand",
-        searchRange:{}
-      },
-      dataType: "json",
-      success: function(data) {
-        var html = '<select id="brand" name="brand" class="form-control">';
-        data.forEach(function(element) {
-               html += `<option value="${element.name}">${element.name}</option>`
-        })
-
-        html += "</select>";
-        $('#brandList').append(html);
-      }
+    $('#type').bind('change', function(){
+      $.ajax({
+        async: false,
+        cache: false,
+        type: "GET",
+        url: "/prod/getBrandListByTypeId",
+        data:  {
+          data: "brand",
+          pid: $(this).val(),
+          searchRange:{}
+        },
+        dataType: "json",
+        success: function(data) {
+          var html = '';
+          data.forEach(function(element) {
+                html += `<option value="${element.id}">${element.name}</option>`
+          })
+          $('#brand').html(html);
+        }
+      });
     });
 
     $("#submit").bind('click', function () {
@@ -259,8 +261,8 @@
       var context = $("#context").val();
       var tel = $("#tel").val();
       var address = $("#address").val();
-      var brand = $("#brand").val();
-      var type =$("#type").val();
+      var brand = $("#brand option:selected").text();
+      var type =$("#type option:selected").text();
 
       if(name === '' || img === '' || context === '' || tel ==='' || address === '' || brand === '' || type==='') {
         alert('请将信息填写完整');
