@@ -14,7 +14,11 @@
 <div class="container">
   <div class="row">
     <div class="col-xs-12 details-info" id="details-info">
-
+      <div style="color: #00B7FF;">产品：<%= prod.name%></div>
+      <div>描述：<%= prod.context%></div>
+      <div>品牌：<%= prod.brand%></div>
+      <div>地址：<%= prod.address%></div>
+      <div>欢迎电联：<%= prod.tel%></div>
     </div>
   </div>
 </div>
@@ -27,28 +31,28 @@
   var type = decodeURI(localURl.split('listName=')[1]).split('&')[0];
   var id = localURl.split('id=')[1];
 
-  $.ajax({
-    async: false,
-    cache: false,
-    type: "GET",
-    url: "/getDataList",
-    data:  {
-      data: "product",
-      type: type,
-      id: id
-    },
-    dataType: "json",
-    success: function(data) {
-      typeData = data;
-      $('#details-info').append(`
-      <div style="color: #00B7FF;">产品：${typeData[0].name}</div>
-      <div>描述：${typeData[0].context}</div>
-      <div>品牌：${typeData[0].brand}</div>
-      <div>地址：${typeData[0].address}</div>
-      <div>欢迎电联：${typeData[0].tel}</div>
-      `);
-    }
-  });
+  // $.ajax({
+  //   async: false,
+  //   cache: false,
+  //   type: "GET",
+  //   url: "/getDataList",
+  //   data:  {
+  //     data: "product",
+  //     type: type,
+  //     id: id
+  //   },
+  //   dataType: "json",
+  //   success: function(data) {
+  //     typeData = data;
+  //     $('#details-info').append(`
+  //     <div style="color: #00B7FF;">产品：${typeData[0].name}</div>
+  //     <div>描述：${typeData[0].context}</div>
+  //     <div>品牌：${typeData[0].brand}</div>
+  //     <div>地址：${typeData[0].address}</div>
+  //     <div>欢迎电联：${typeData[0].tel}</div>
+  //     `);
+  //   }
+  // });
 
   /*nav li change*/
   var liArr = $.makeArray($('#example-navbar-collapse li'));

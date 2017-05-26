@@ -11,6 +11,7 @@ const logger = require('koa-logger');
 
 const index = require('./routes/index');
 const users = require('./routes/users');
+const prod = require('./routes/prod');
 
 // middlewares
 app.use(convert(bodyparser));
@@ -56,6 +57,7 @@ function validateUrl(path){
 
 router.use('/', index.routes(), index.allowedMethods());
 router.use('/users', users.routes(), users.allowedMethods());
+router.use('/prod', prod.routes(), prod.allowedMethods());
 
 app.use(router.routes(), router.allowedMethods());
 // response
