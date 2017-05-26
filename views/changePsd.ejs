@@ -12,6 +12,7 @@
     }
 </style>
 
+
 <body>
 <div class="container-fliud">
     <div class="col-xs-12">
@@ -21,7 +22,7 @@
                     <label for="exampleInputEmail1" style="color: #7e7e7e;">请输入原密码</label>
                 </div>
                 <div class="panel-body">
-                    <input type="password" onblur="isTrue(this)" class="form-control" id="oldPsd" placeholder="old password">
+                    <input type="password" onblur="isTrue(this)" class="form-control vali-item" data-vali="1" id="oldPsd" placeholder="old password">
 
                 </div>
             </div>
@@ -32,7 +33,7 @@
                     <label for="exampleInputPassword1" style="color: #7e7e7e;">请输入新密码</label>
                 </div>
                 <div class="panel-body">
-                    <input type="password" onblur="isSame(this)" class="form-control" id="newPsd" placeholder="new password">
+                    <input type="password" onblur="formatInputValue(this)" class="form-control vali-item" data-vali="1" id="newPsd" placeholder="new password">
                 </div>
             </div>
         </div>
@@ -42,35 +43,69 @@
                     <label for="exampleInputPassword1" style="color: #7e7e7e;">请再次输入新密码</label>
                 </div>
                 <div class="panel-body">
-                    <input type="password" onblur="isSame(this)" class="form-control" id="newPsdAgain" placeholder="new password again">
+                    <input type="password" onblur="formatInputValue(this)" class="form-control vali-item" data-vali="1" id="newPsdAgain" placeholder="new password again">
                 </div>
             </div>
         </div>
         <div class="form-group">
-            <button onclick="changePsd()" class="btn btn-info center-block" style="width: 150px; height: 40px; margin-top: 40px;">确认修改</button>
+            <button onclick="changePsd()" class="btn btn-info center-block" id="submit" style="width: 150px; height: 40px; margin-top: 40px;">确认修改</button>
         </div>
     </div>
 </div>
 </body>
 <script>
 
-    //提交修改的密码
+    var regPsd = /^[0-9a-zA-Z_]{6,12}$/
+
+    //提交修改后的密码
     function changePsd() {
-//        if(isTrue() && issame()){
-// //        var newPsd = $('#newPsd').val();
-//        $.ajax({
-////            将新密码提交
-//        })}
+        var newPsd = $('#newPsd').val();
+        $.ajax({
+            url: '/setNewPsd',
+            type: 'POST',
+            datatype: 'json',
+            data: {
+                collection: 'user',
+                data: {
+                    password: newPsd,
+                    name: "<%= name%>",
+                    email: "<%= email%>",
+                    id: "<%= id%>",
+                    address: "<%= address%>",
+                    tel: "<%= tel%>",
+                }
+            },
+            success: function (data) {
+                window.parent.location.href='/home';
+                
+            }
+        })
+    }
+    //end
+
+    function formatInputValue(ele) {
+        if($(ele).val()) {
+            if(!regPsd.test($(ele).val())) {
+                alert('密码只能由6-12位的数字、字母、下划线组成')
+            }
+        }else {
+            alert('密码不能为空')
+        }
+
     }
 
     //验证旧密码是否正确
-    function isTrue(element) {
-        alert('old')
-    }
+    function isTrue(ele) {
+        var oldPsd = $('#oldPsd').val();
+        if(oldPsd) {
+            if(oldPsd !== "<%= password %>") {
+                alert('请输入正确的原始密码');
+                $('#oldPsd').val('');
+            }
+        }else {
+            alert('请输入原始密码');
 
-    //验证两次输入的新密码是否一致
-    function isSame(element) {
-        alert(element.id)
+        }
     }
 
 </script>

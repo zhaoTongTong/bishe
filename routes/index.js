@@ -50,12 +50,31 @@ router.get('getBrand', async function (ctx, next) {
 });
 
 router.get('getPersonalInfo', async function (ctx, next) {
+  var j = ctx.cookies.get('koa:sess'), name = "";
+  if(j) {
+    j = JSON.parse(decodeURI(j));
+    name = j.name;
+  }
   await ctx.render('personalInfo', {
+    name: name,
+    email: j.email,
+    address: j.address,
+    tel: j.tel
   });
 });
 
 router.get('changePsd', async function (ctx, next) {
+  var j = ctx.cookies.get('koa:sess'), name = "";
+  if(j) {
+    j = JSON.parse(decodeURI(j));
+  }
   await ctx.render('changePsd', {
+    password: j.password,
+    name: j.name,
+    email: j.email,
+    address: j.address,
+    tel: j.tel,
+    id: j.id
   });
 });
 
@@ -107,6 +126,16 @@ router.post('addDataRow', async function (ctx, next) {
 });
 
 router.post('setPersonalInfo', async function (ctx, next) {
+  console.dir(ctx.request.body);
+  var result = await new Promise(function(resolve, reject){
+    add.add(ctx, function(data){
+      resolve(data);
+    });
+  });
+  ctx.body = result;
+});
+
+router.post('setNewPsd', async function (ctx, next) {
   console.dir(ctx.request.body);
   var result = await new Promise(function(resolve, reject){
     add.add(ctx, function(data){
