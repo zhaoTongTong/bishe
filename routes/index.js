@@ -92,7 +92,13 @@ router.get('changePsd', async function (ctx, next) {
 });
 
 router.get('getnew', async function (ctx, next) {
+  var j = ctx.cookies.get('koa:sess'), name = "";
+  if(j) {
+    j = JSON.parse(decodeURI(j));
+    name = j.name;
+  }
   await ctx.render('new', {
+    name:name
   });
 });
 
