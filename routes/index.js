@@ -30,12 +30,24 @@ router.get('home', async function (ctx, next) {
 });
 
 router.get('details', async function (ctx, next) {
+  var j = ctx.cookies.get('koa:sess'), name = "";
+  if(j) {
+    j = JSON.parse(decodeURI(j));
+    name = j.name;
+  }
   await ctx.render('details', {
+    name:name
   });
 });
 
 router.get('list', async function (ctx, next) {
+  var j = ctx.cookies.get('koa:sess'), name = "";
+  if(j) {
+    j = JSON.parse(decodeURI(j));
+    name = j.name;
+  }
   await ctx.render('list', {
+    name:name
   });
 });
 

@@ -21,10 +21,24 @@
 <div class="container">
   <div class="row">
     <div class="col-xs-12 list" id="list-title">
+      <span style="font-size: 1.4em; color: #00B7FF;"><%= type%></span>
     </div>
   </div>
   <div class="row">
-    <div class="col-xs-12" id="list"></div>
+    <div class="col-xs-12" id="list">
+      <% prods.forEach(function(prod){ %>
+      <div class="row list">
+      <a href="/prod/detail?id=<%= prod.id%>"><div class="col-xs-1">
+        <img src="" alt="picture">
+        </div>
+        <div class="col-xs-11" style="line-height: 33px;">
+          <div class="col-xs-12"><%= prod.name%></div>
+          <div class="col-xs-12"><%= prod.brand%></div>
+          <div class="col-xs-12"><%= prod.context%></div>
+        </div></a>
+      </div>
+      <%});%>
+    </div>
   </div>
 </div>
 
@@ -35,63 +49,63 @@
 //  get list data
 var typeData;
 var localURl = window.location.href;
-var type = decodeURI(localURl.split('listName=')[1]);
-$('#list-title').append(`<span style="font-size: 1.4em; color: #00B7FF;">${type}</span>`)
+var type = decodeURI(localURl.split('type=')[1]);
+// $('#list-title').append(`<span style="font-size: 1.4em; color: #00B7FF;">${type}</span>`)
 
-$.ajax({
-  async: false,
-  cache: false,
-  type: "GET",
-  url: "/getDataList",
-  data:  {
-    data: "product",
-    type: type,
-  },
-  dataType: "json",
-  success: function(data) {
-    typeData = data;
-    typeData.forEach(function(element) {
-//      var imgURL = element.img;
-      console.log(element.img);
+// $.ajax({
+//   async: false,
+//   cache: false,
+//   type: "GET",
+//   url: "/getDataList",
+//   data:  {
+//     data: "product",
+//     type: type,
+//   },
+//   dataType: "json",
+//   success: function(data) {
+//     typeData = data;
+//     typeData.forEach(function(element) {
+// //      var imgURL = element.img;
+//       console.log(element.img);
 
-      $('#list').append(`
-      <div class="row list">
-      <a href=""><div class="col-xs-1">
-        <img src=imgURL alt="picture">
-        </div>
-        <div class="col-xs-11" style="line-height: 33px;">
-          <div class="col-xs-12">${element.name}</div>
-          <div class="col-xs-12">${element.brand}</div>
-          <div class="col-xs-12">${element.context}</div>
-        </div></a>
-      </div>
-    `);
-    });
-  }
-});
+//       $('#list').append(`
+//       <div class="row list">
+//       <a href=""><div class="col-xs-1">
+//         <img src="" alt="picture">
+//         </div>
+//         <div class="col-xs-11" style="line-height: 33px;">
+//           <div class="col-xs-12">${element.name}</div>
+//           <div class="col-xs-12">${element.brand}</div>
+//           <div class="col-xs-12">${element.context}</div>
+//         </div></a>
+//       </div>
+//     `);
+//     });
+//   }
+// });
 
 
 //to details
-var aArr = $('.list a');
-$.makeArray(aArr).forEach(function (element, index) {
-  $(element).on('click', function() {
-    var detailsURL = localURl.split('list')[0]+"details?listName="+localURl.split('=')[1]+'&id='+typeData[index].id;
-    $(element).attr({href: detailsURL});
-  })
-});
+// var aArr = $('.list a');
+// $.makeArray(aArr).forEach(function (element, index) {
+//   $(element).on('click', function() {
+//     var detailsURL = localURl.split('list')[0]+"details?listName="+localURl.split('=')[1]+'&id='+typeData[index].id;
+//     $(element).attr({href: detailsURL});
+//   })
+// });
 
-//  nav li change
-  var liArr = $.makeArray($('#example-navbar-collapse li'));
-  var style = 'color: #00B7FF;fonts-size: 1.2em;';
+// //  nav li change
+//   var liArr = $.makeArray($('#example-navbar-collapse li'));
+//   var style = 'color: #00B7FF;fonts-size: 1.2em;';
 
-  liArr.forEach(function(element) {
-    $(element).removeClass('active');
-    var a = element.getElementsByTagName('a');
-    $(a).removeAttr('style');
-  });
+//   liArr.forEach(function(element) {
+//     $(element).removeClass('active');
+//     var a = element.getElementsByTagName('a');
+//     $(a).removeAttr('style');
+//   });
 
-  $(liArr[1]).addClass('active');
-  var a = liArr[1].getElementsByTagName('a');
-  $(a).attr("style", style);
+//   $(liArr[1]).addClass('active');
+//   var a = liArr[1].getElementsByTagName('a');
+//   $(a).attr("style", style);
 </script>
 <%include footer.ejs%>
