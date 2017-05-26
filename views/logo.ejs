@@ -18,6 +18,11 @@
 </div>
 <script>
     function comePersonal() {
-        window.location.href='/personal';
+        if("<%= name%>") {
+            window.location.href='/personal';
+        }else {
+            alert('请先登录');
+        }
+//        window.location.href='/personal';
     }
 </script>
