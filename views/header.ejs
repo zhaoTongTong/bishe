@@ -93,11 +93,20 @@
                 <div class="col-xs-10">
                     <nav class="nav navbar-right">
                         <ul>
-                            <li id="personal"><a id="login" onclick="login()">
+                            <li id="personal">
+                                <% if (name) {%>
+                                <a href="/personal">
+                                    <small>欢迎，<%= name%></small>
+                                </a> / <a onclick="exitLogin()">
+                                    <small>退出</small>
+                                </a>
+                                <% } else {%>
+                                <a id="login" onclick="login()">
                                     <small>登录</small>
                                 </a> / <a id="register" onclick="register()">
                                     <small>注册</small>
-                                </a></li>
+                                </a>
+                            <% }%></li>
                             <!--<li><a>个人中心</a></li>-->
                             <li><a>帮助中心</a></li>
                         </ul>
@@ -114,6 +123,7 @@
     var regEmail = /^[0-9a-zA-Z_]+\@[0-9a-z]+\.[a-z]{2,4}$/;
     var regPsd = /^[0-9a-zA-Z_]{6,12}$/
     var regAds = /^[\u4E00-\u9FA5]/;
+
     /*-------------------------注册------------------------*/
     function register() {
         $('body').addClass('ovfHiden');
@@ -304,7 +314,7 @@
         var password = $('#password').val();
         if (name && password) {
             $.ajax({
-                url: '/getDataList',
+                url: '/users/login',
                 type: 'GET',
                 dataType: 'json',
                 data: {
@@ -315,7 +325,6 @@
                 success: function (result) {
                     if (result.length > 0) {
                         remove();
-                        console.log(result);
                         $('#personal').html(`<a href="/personal"><small>欢迎, ${result[0].name}</small></a> / <a onclick="exitLogin()"><small>退出</small></a>`);
                     } else {
                         showPrompt("psd", '用户名或密码错误！');
@@ -327,12 +336,22 @@
     //退出登录
     function exitLogin() {
         //刷新页面
-        location.reload(true);
-        $('#personal').html(`<li id="personal"><a id="login" onclick="login()">
+
+        $.ajax({
+            url:'/users/logout',
+            type:'get',
+            datatype: 'json',
+            success: function(result) {
+                window.location.href='/home';
+                $('#personal').html(`<li id="personal"><a id="login" onclick="login()">
                 <small>登录</small>
                 </a> / <a id="register" onclick="register()">
                     <small>注册</small>
                 </a></li>`);
+            }
+        })
+//        location.reload(true);
+
     }
     //end
     //关闭注册、登录

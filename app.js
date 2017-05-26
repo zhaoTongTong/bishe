@@ -43,7 +43,7 @@ app.use(async (ctx, next) => {
 //校验请求URL
 function validateUrl(path){
   //需要校验的请求path加入下面的数组中
-  var valiArr = ['/getnew', '/list'];
+  var valiArr = ['/getnew', '/list', '/personal'];
   var state = false;
   for(var i = 0; i < valiArr.length; i ++){
     if(path == valiArr[i]){

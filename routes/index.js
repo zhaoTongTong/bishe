@@ -19,7 +19,13 @@ router.get('/', async function (ctx, next) {
 });
 
 router.get('home', async function (ctx, next) {
+  var j = ctx.cookies.get('koa:sess'), name = "";
+  if(j) {
+    j = JSON.parse(decodeURI(j));
+    name = j.name;
+  }
   await ctx.render('home', {
+    name:name
   });
 });
 
@@ -64,7 +70,13 @@ router.get('editing', async function (ctx, next) {
 });
 
 router.get('personal', async function (ctx, next) {
+  var j = ctx.cookies.get('koa:sess'), name = "";
+  if(j) {
+    j = JSON.parse(decodeURI(j));
+    name = j.name;
+  }
   await ctx.render('personal', {
+    name:name
   });
 });
 
