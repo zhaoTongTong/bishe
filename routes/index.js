@@ -178,7 +178,7 @@ router.post('uploadFile', async function(ctx, next) {
       resolve({ err, fieldsjson, files });
     });
   })
-
+  ctx.body = files;
   //await nextUpload(err, ctx, files, ftptool);
 })
 
