@@ -29,7 +29,7 @@
       <% prods.forEach(function(prod){ %>
       <div class="row list">
       <a href="/prod/detail?id=<%= prod.id%>"><div class="col-xs-1">
-        <img src="" alt="picture">
+        <img src="<%= prod.img%>" alt="picture">
         </div>
         <div class="col-xs-11" style="line-height: 33px;">
           <div class="col-xs-12"><%= prod.name%></div>
