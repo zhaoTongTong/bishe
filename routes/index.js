@@ -173,7 +173,7 @@ router.post('uploadFile', async function(ctx, next) {
   //let ftptool;
   let { err, fieldsjson, files } = await new Promise((resolve) => {
     form.parse(ctx.req, function(err, fieldsjson, files) {
-      console.dir(files);
+      //console.dir(files);
       //ftptool = new ftptoolobj();
       resolve({ err, fieldsjson, files });
     });

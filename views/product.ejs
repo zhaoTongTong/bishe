@@ -368,7 +368,7 @@
     var oFileInput = new FileInput();
     oFileInput.Init("fileUploadInput", "/uploadFile");
     $('#fileUploadInput').on('fileuploaded', function (event, data) {
-      alert(data.response.fileUploadInput.path.replace(/\\/g, '/').replace('public/', '/'));
+//      alert(data.response.fileUploadInput.path.replace(/\\/g, '/').replace('public/', '/'));
         $("#img").val(data.response.fileUploadInput.path.replace(/\\/g, '/').replace('public/', '/'));
         // showSrc = data.response.data.packageName;
         // isUploaded = true;
